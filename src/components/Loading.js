@@ -1,4 +1,5 @@
-import loadingStyles from '../styles/loading'
+import CircularProgress from 'material-ui/CircularProgress'
+import loadingStyles, {circularProgressStyles} from '../styles/loading'
 import React, {Component, PropTypes} from 'react'
 
 export default class Loading extends Component {
@@ -14,7 +15,14 @@ export default class Loading extends Component {
     const {message} = this.props
 
     return (
-      <h1 style={loadingStyles}>{message}</h1>
+      <div style={loadingStyles}>
+        <CircularProgress
+          size={80}
+          style={circularProgressStyles}
+          thickness={5}
+        />
+        <h1>{message}</h1>
+      </div>
     )
   }
 }

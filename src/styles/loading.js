@@ -4,3 +4,8 @@ export default {
   top: '50%',
   transform: 'translate(-50%, -50%)'
 }
+
+export const circularProgressStyles = {
+  left: '50%',
+  transform: 'translateX(-50%)'
+}
