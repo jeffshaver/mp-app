@@ -1,6 +1,8 @@
 import AppBar from 'material-ui/AppBar'
 import Loading from './components/Loading'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+// API: remove
+import userData from './data/user'
 // REDUX: add PropTypes import back in
 import React, {Component} from 'react'
 
@@ -31,10 +33,7 @@ class App extends Component {
     // API: replace with fetch call when api exists
     setTimeout(() => {
       this.setState({
-        user: {
-          username: 'jeff',
-          authenticated: true
-        }
+        user: userData
       })
     }, 2000)
   }
