@@ -2,7 +2,7 @@ import CircularProgress from 'material-ui/CircularProgress'
 import loadingStyles, {circularProgressStyles} from '../styles/loading'
 import React, {Component, PropTypes} from 'react'
 
-export default class Loading extends Component {
+class Loading extends Component {
   static propTypes = {
     message: PropTypes.string
   }
@@ -26,3 +26,5 @@ export default class Loading extends Component {
     )
   }
 }
+
+export default Loading

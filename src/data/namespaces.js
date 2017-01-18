@@ -1,5 +1,7 @@
 export default {
-  namespaces: [
-    {id: 0, name: 'jeff'}
-  ]
+  0: {
+    namespaces: [
+      {id: 0, name: 'jeff'}
+    ]
+  }
 }
