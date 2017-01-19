@@ -1,42 +1,42 @@
 import {Map} from 'immutable'
 // API: remove
-import userData from '../data/user'
+import projectsData from '../data/projects'
 
-export const FAILURE = 'mp-app/user/FAILURE'
-export const REQUEST = 'mp-app/user/REQUEST'
-export const SUCCESS = 'mp-app/user/SUCCESS'
+export const FAILURE = 'mp-app/projects/FAILURE'
+export const REQUEST = 'mp-app/projects/REQUEST'
+export const SUCCESS = 'mp-app/projects/SUCCESS'
 
-export const fetchUserFailure = (error) => ({
+export const fetchProjectsFailure = (error) => ({
   payload: {error},
   type: FAILURE
 })
 
-export const fetchUserRequest = (json) => ({
+export const fetchProjectsRequest = (json) => ({
   type: REQUEST
 })
 
-export const fetchUserSuccess = (data) => ({
+export const fetchProjectsSuccess = (data) => ({
   payload: {data},
   receivedAt: Date.now(),
   type: SUCCESS
 })
 
-export const fetchUser = () =>
+export const fetchProjects = (userId) =>
   (dispatch) => {
-    dispatch(fetchUserRequest())
+    dispatch(fetchProjectsRequest(userId))
 
     // API: remove
-    dispatch(fetchUserSuccess(userData))
+    dispatch(fetchProjectsSuccess(projectsData[userId]))
 
     // API: add back in
     // return fetch(`${apiUri}/authenticate`, {...defaultFetchOptions})
     //   .then(checkFetchStatus)
     //   .then((response) => response.json())
-    //   .then((json) => dispatch(fetchUserSuccess(json)))
-    //   .catch((error) => dispatch(fetchUserFailure(error)))
+    //   .then((json) => dispatch(fetchProjectsSuccess(json)))
+    //   .catch((error) => dispatch(fetchProjectsFailure(error)))
   }
 
-export const initialState = Map({
+const initialState = Map({
   data: Map(),
   error: undefined,
   isFetching: false,

@@ -5,10 +5,11 @@ import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './components/Loading'
 import {Map} from 'immutable'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import Projects from './components/Projects'
 import SideBar from './components/SideBar'
 import React, {Component, PropTypes} from 'react'
 
-class App extends Component {
+export class App extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     user: ImmutablePropTypes.map.isRequired
@@ -42,6 +43,7 @@ class App extends Component {
             zDepth={0}
           />
           <SideBar />
+          <Projects />
         </div>
       )
       : (

@@ -60,7 +60,8 @@
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "scrollbar-width": "^3.1.1"
   },
   "scripts": {
     "start": "node scripts/start.js",
