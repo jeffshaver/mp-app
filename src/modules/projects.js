@@ -28,7 +28,7 @@ export const fetchProjects = (userId) =>
     // API: remove
     setTimeout(() => {
       dispatch(fetchProjectsSuccess(projectsData[userId]))
-    }, 2000)
+    }, 1000)
 
     // API: add back in
     // return fetch(`${apiUri}/authenticate`, {...defaultFetchOptions})

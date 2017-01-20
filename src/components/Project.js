@@ -2,7 +2,7 @@ import {browserHistory} from 'react-router'
 import {connect} from 'react-redux'
 import {fetchProjects} from '../modules/projects'
 import {getProject} from '../modules/project'
-import {header} from '../styles/common'
+import Header from './Header'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './Loading'
 import React, {Component, PropTypes} from 'react'
@@ -33,14 +33,17 @@ export class Project extends Component {
 
     if (projects.get('isFetching')) {
       return (
-        <Loading message={'Loading Projects'} />
+        <div>
+          <Header>Projects</Header>
+          <Loading message={'Loading Projects'} />
+        </div>
       )
     }
 
     if (!project) return null
 
     return (
-      <h1 style={header}>
+      <Header>
         <span
           style={{
             cursor: 'pointer'
@@ -48,7 +51,8 @@ export class Project extends Component {
           onTouchTap={this.goToProjects}
         >
           Projects
-        </span> / {project.get('name')}</h1>
+        </span> / {project.get('name')}
+      </Header>
     )
   }
 }

@@ -2,7 +2,7 @@ import {browserHistory} from 'react-router'
 import {connect} from 'react-redux'
 import {fetchProjects} from '../modules/projects'
 import getScrollbarWidth from 'scrollbar-width'
-import {header} from '../styles/common'
+import Header from './Header'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './Loading'
 import React, {Component, PropTypes} from 'react'
@@ -38,10 +38,14 @@ export class Projects extends Component {
     const {projects} = this.props
     const projectsData = projects.get('data')
     const numberOfProjects = projectsData.count()
+    const header = <Header>Projects</Header>
 
     if (projects.get('isFetching')) {
       return (
-        <Loading message={'Fetching Projects'} />
+        <div>
+          {header}
+          <Loading message={'Fetching Projects'} />
+        </div>
       )
     }
 
@@ -57,7 +61,7 @@ export class Projects extends Component {
 
     return (
       <div>
-        <h1 style={header}>Projects</h1>
+        {header}
         <Table
           fixedFooter={false}
           headerStyle={headerStyle}
