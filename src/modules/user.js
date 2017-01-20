@@ -26,7 +26,9 @@ export const fetchUser = () =>
     dispatch(fetchUserRequest())
 
     // API: remove
-    dispatch(fetchUserSuccess(userData))
+    setTimeout(() => {
+      dispatch(fetchUserSuccess(userData))
+    }, 2000)
 
     // API: add back in
     // return fetch(`${apiUri}/authenticate`, {...defaultFetchOptions})

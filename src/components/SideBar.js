@@ -1,3 +1,4 @@
+import {browserHistory} from 'react-router'
 import Drawer from 'material-ui/Drawer'
 import MenuItem from 'material-ui/MenuItem'
 import muiThemeable from 'material-ui/styles/muiThemeable'
@@ -6,6 +7,10 @@ import React, {Component, PropTypes} from 'react'
 class SideBar extends Component {
   static propTypes = {
     muiTheme: PropTypes.object.isRequired
+  }
+
+  handleLogoClick = () => {
+    browserHistory.push('/')
   }
 
   render () {
@@ -28,14 +33,19 @@ class SideBar extends Component {
       >
         <MenuItem
           innerDivStyle={{
-            background: primary1Color,
-            color: alternateTextColor,
-            padding: '8px 16px',
-            fontSize: '1.25rem',
-            fontWeight: 600
+            padding: 0
           }}
+          onTouchTap={this.handleLogoClick}
         >
-          MP
+          <h1
+            style={{
+              background: primary1Color,
+              color: alternateTextColor,
+              lineHeight: 'initial',
+              margin: 0,
+              padding: '2rem 0 .5rem 0'
+            }}
+          >MP</h1>
         </MenuItem>
         {
           /*

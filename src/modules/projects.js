@@ -1,6 +1,6 @@
-import {Map} from 'immutable'
 // API: remove
 import projectsData from '../data/projects'
+import {fromJS, Map} from 'immutable'
 
 export const FAILURE = 'mp-app/projects/FAILURE'
 export const REQUEST = 'mp-app/projects/REQUEST'
@@ -26,7 +26,9 @@ export const fetchProjects = (userId) =>
     dispatch(fetchProjectsRequest(userId))
 
     // API: remove
-    dispatch(fetchProjectsSuccess(projectsData[userId]))
+    setTimeout(() => {
+      dispatch(fetchProjectsSuccess(projectsData[userId]))
+    }, 2000)
 
     // API: add back in
     // return fetch(`${apiUri}/authenticate`, {...defaultFetchOptions})
@@ -36,7 +38,7 @@ export const fetchProjects = (userId) =>
     //   .catch((error) => dispatch(fetchProjectsFailure(error)))
   }
 
-const initialState = Map({
+export const initialState = Map({
   data: Map(),
   error: undefined,
   isFetching: false,
@@ -59,7 +61,7 @@ export default (state = initialState, {payload = {}, type, ...action}) => {
       })
     case SUCCESS:
       return state.merge({
-        data: Map(data),
+        data: fromJS(data),
         error: undefined,
         isFetching: false,
         lastUpdated: action.receivedAt

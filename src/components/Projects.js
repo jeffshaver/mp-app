@@ -1,7 +1,10 @@
+import {browserHistory} from 'react-router'
 import {connect} from 'react-redux'
 import {fetchProjects} from '../modules/projects'
 import getScrollbarWidth from 'scrollbar-width'
+import {header} from '../styles/common'
 import ImmutablePropTypes from 'react-immutable-proptypes'
+import Loading from './Loading'
 import React, {Component, PropTypes} from 'react'
 import {
   Table,
@@ -12,6 +15,7 @@ import {
   TableRowColumn
 } from 'material-ui/Table'
 
+// TODO: handle error state
 export class Projects extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -19,14 +23,28 @@ export class Projects extends Component {
     user: ImmutablePropTypes.map.isRequired
   }
   componentDidMount () {
-    const {dispatch, user} = this.props
+    const {dispatch, projects, user} = this.props
+
+    if (!projects.get('data').isEmpty()) return
 
     dispatch(fetchProjects(user.getIn(['data', 'id'])))
   }
 
+  handleRowClick = (id) => {
+    browserHistory.push(`/projects/${id}`)
+  }
+
   render () {
     const {projects} = this.props
-    const numberOfProjects = projects.count()
+    const projectsData = projects.get('data')
+    const numberOfProjects = projectsData.count()
+
+    if (projects.get('isFetching')) {
+      return (
+        <Loading message={'Fetching Projects'} />
+      )
+    }
+
     const cellHeight = 48
     const tableHeight = 300
     const willHaveScrollbar = numberOfProjects >= Math.round(tableHeight / cellHeight)
@@ -39,12 +57,11 @@ export class Projects extends Component {
 
     return (
       <div>
-        <h1>Projects</h1>
+        <h1 style={header}>Projects</h1>
         <Table
           fixedFooter={false}
           headerStyle={headerStyle}
           height={`${tableHeight}px`}
-          selectable={false}
         >
           <TableHeader
             adjustForCheckbox={false}
@@ -61,14 +78,18 @@ export class Projects extends Component {
             stripedRows={true}
           >
             {
-              projects.get('data').entrySeq().toArray().map(([id, data]) => (
+              projectsData.entrySeq().toArray().map(([id, data]) => (
                 <TableRow
                   key={id}
                   striped={true}
+                  style={{
+                    cursor: 'pointer'
+                  }}
+                  onTouchTap={() => this.handleRowClick(id, data)}
                 >
                   <TableRowColumn>{id}</TableRowColumn>
-                  <TableRowColumn>{data.name}</TableRowColumn>
-                  <TableRowColumn>{data.status}</TableRowColumn>
+                  <TableRowColumn>{data.get('name')}</TableRowColumn>
+                  <TableRowColumn>{data.get('status')}</TableRowColumn>
                 </TableRow>
               ))
             }

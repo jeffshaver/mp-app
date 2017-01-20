@@ -1,16 +1,15 @@
-import AppBar from 'material-ui/AppBar'
 import {connect} from 'react-redux'
 import {fetchUser} from './modules/user'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './components/Loading'
 import {Map} from 'immutable'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import Projects from './components/Projects'
 import SideBar from './components/SideBar'
 import React, {Component, PropTypes} from 'react'
 
 export class App extends Component {
   static propTypes = {
+    children: PropTypes.node,
     dispatch: PropTypes.func.isRequired,
     user: ImmutablePropTypes.map.isRequired
   }
@@ -23,27 +22,22 @@ export class App extends Component {
 
     if (user.getIn(['data', 'authenticated'])) return
 
-    // API: remove setTimeout
-    setTimeout(() => {
-      dispatch(fetchUser())
-    }, 2000)
+    dispatch(fetchUser())
   }
 
   render () {
-    const {user} = this.props
+    const {children, user} = this.props
     const content = user.getIn(['data', 'authenticated'])
       ? (
         <div
           style={{
-            padding: '0 0 0 110px'
+            height: '100%',
+            margin: '0 0 0 110px',
+            position: 'relative'
           }}
         >
-          <AppBar
-            iconElementLeft={<span />}
-            zDepth={0}
-          />
           <SideBar />
-          <Projects />
+          {children}
         </div>
       )
       : (

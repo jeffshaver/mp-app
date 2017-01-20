@@ -36,7 +36,7 @@ export const fetchNamespaces = (userId) =>
     //   .catch((error) => dispatch(fetchNamespacesFailure(error)))
   }
 
-const initialState = Map({
+export const initialState = Map({
   data: Map(),
   error: undefined,
   isFetching: false,

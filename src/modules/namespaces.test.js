@@ -3,13 +3,13 @@
 import {Map} from 'immutable'
 import reducer, {
   FAILURE,
-  fetchUserFailure,
-  fetchUserRequest,
-  fetchUserSuccess,
+  fetchNamespacesFailure,
+  fetchNamespacesRequest,
+  fetchNamespacesSuccess,
   initialState,
   REQUEST,
   SUCCESS
-} from './user'
+} from './namespaces'
 
 describe('sync actions', () => {
   it('should create a FAILURE action when the fetch fails', () => {
@@ -19,7 +19,7 @@ describe('sync actions', () => {
       type: FAILURE
     }
 
-    expect(fetchUserFailure(error)).toEqual(expectedAction)
+    expect(fetchNamespacesFailure(error)).toEqual(expectedAction)
   })
 
   it('should create a REQUEST action when the fetch starts', () => {
@@ -27,7 +27,7 @@ describe('sync actions', () => {
       type: REQUEST
     }
 
-    expect(fetchUserRequest()).toEqual(expectedAction)
+    expect(fetchNamespacesRequest()).toEqual(expectedAction)
   })
 
   it('should create a SUCCESS action when the fetch fails', () => {
@@ -36,7 +36,7 @@ describe('sync actions', () => {
       receivedAt: null,
       type: SUCCESS
     }
-    const result = fetchUserSuccess({})
+    const result = fetchNamespacesSuccess({})
 
     expectedAction.receivedAt = result.receivedAt
 
@@ -79,7 +79,11 @@ describe('reducer', () => {
   })
 
   it(`should handle ${SUCCESS}`, () => {
-    const data = {authenticated: true, id: 0, username: 'darth'}
+    const data = {
+      namespaces: [
+        {id: 0, name: 'darth'}
+      ]
+    }
     const result = reducer(initialState, {
       payload: {data},
       type: SUCCESS

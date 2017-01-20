@@ -1,15 +1,15 @@
 /* globals describe, expect, it */
 
-import {Map} from 'immutable'
+import {fromJS, Map} from 'immutable'
 import reducer, {
   FAILURE,
-  fetchUserFailure,
-  fetchUserRequest,
-  fetchUserSuccess,
+  fetchProjectsFailure,
+  fetchProjectsRequest,
+  fetchProjectsSuccess,
   initialState,
   REQUEST,
   SUCCESS
-} from './user'
+} from './projects'
 
 describe('sync actions', () => {
   it('should create a FAILURE action when the fetch fails', () => {
@@ -19,7 +19,7 @@ describe('sync actions', () => {
       type: FAILURE
     }
 
-    expect(fetchUserFailure(error)).toEqual(expectedAction)
+    expect(fetchProjectsFailure(error)).toEqual(expectedAction)
   })
 
   it('should create a REQUEST action when the fetch starts', () => {
@@ -27,7 +27,7 @@ describe('sync actions', () => {
       type: REQUEST
     }
 
-    expect(fetchUserRequest()).toEqual(expectedAction)
+    expect(fetchProjectsRequest()).toEqual(expectedAction)
   })
 
   it('should create a SUCCESS action when the fetch fails', () => {
@@ -36,7 +36,7 @@ describe('sync actions', () => {
       receivedAt: null,
       type: SUCCESS
     }
-    const result = fetchUserSuccess({})
+    const result = fetchProjectsSuccess({})
 
     expectedAction.receivedAt = result.receivedAt
 
@@ -79,14 +79,19 @@ describe('reducer', () => {
   })
 
   it(`should handle ${SUCCESS}`, () => {
-    const data = {authenticated: true, id: 0, username: 'darth'}
+    const data = {
+      0: {
+        status: 'approved',
+        name: 'project 1'
+      }
+    }
     const result = reducer(initialState, {
       payload: {data},
       type: SUCCESS
     })
 
-    expect(result).toEqual(Map({
-      data: Map(data),
+    expect(result).toEqual(fromJS({
+      data,
       error: undefined,
       isFetching: false,
       lastUpdated: result.lastUpdated
