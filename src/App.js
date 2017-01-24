@@ -1,4 +1,6 @@
 import {connect} from 'react-redux'
+import {fetchNamespaces} from './modules/namespaces'
+import {fetchProjects} from './modules/projects'
 import {fetchUser} from './modules/user'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './components/Loading'
@@ -22,7 +24,15 @@ export class App extends Component {
 
     if (user.getIn(['data', 'authenticated'])) return
 
-    dispatch(fetchUser())
+    dispatch(
+      fetchUser()
+    )
+    .then((user) => {
+      Promise.all([
+        dispatch(fetchProjects(user.id)),
+        dispatch(fetchNamespaces(user.id))
+      ])
+    })
   }
 
   render () {

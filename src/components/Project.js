@@ -1,10 +1,10 @@
 import {browserHistory} from 'react-router'
 import {connect} from 'react-redux'
-import {fetchProjects} from '../modules/projects'
 import {getProject} from '../modules/project'
 import Header from './Header'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './Loading'
+import Namespaces from './Namespaces'
 import React, {Component, PropTypes} from 'react'
 
 // TODO: Handle error state
@@ -12,16 +12,9 @@ export class Project extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     project: PropTypes.object,
+    projectId: PropTypes.string.isRequired,
     projects: ImmutablePropTypes.map.isRequired,
     user: ImmutablePropTypes.map.isRequired
-  }
-
-  componentDidMount () {
-    const {dispatch, projects, user} = this.props
-
-    if (!projects.get('data').isEmpty()) return
-
-    dispatch(fetchProjects(user.getIn(['data', 'id'])))
   }
 
   goToProjects = () => {
@@ -29,7 +22,7 @@ export class Project extends Component {
   }
 
   render () {
-    const {project, projects} = this.props
+    const {project, projectId, projects} = this.props
 
     if (projects.get('isFetching')) {
       return (
@@ -43,22 +36,26 @@ export class Project extends Component {
     if (!project) return null
 
     return (
-      <Header>
-        <span
-          style={{
-            cursor: 'pointer'
-          }}
-          onTouchTap={this.goToProjects}
-        >
-          Projects
-        </span> / {project.get('name')}
-      </Header>
+      <div>
+        <Header>
+          <span
+            style={{
+              cursor: 'pointer'
+            }}
+            onTouchTap={this.goToProjects}
+          >
+            Projects
+          </span> / {project.get('name')}
+        </Header>
+        <Namespaces projectId={projectId} />
+      </div>
     )
   }
 }
 
-export default connect((state, {params: {id}}) => ({
-  project: getProject(state, id),
+export default connect((state, {params: {projectId}}) => ({
+  project: getProject(state, projectId),
+  projectId,
   projects: state.projects,
   user: state.user
 }))(Project)

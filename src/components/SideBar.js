@@ -1,12 +1,17 @@
 import {browserHistory} from 'react-router'
+import {connect} from 'react-redux'
 import Drawer from 'material-ui/Drawer'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 import MenuItem from 'material-ui/MenuItem'
 import muiThemeable from 'material-ui/styles/muiThemeable'
+import SelectField from 'material-ui/SelectField'
+import Subheader from 'material-ui/Subheader'
 import React, {Component, PropTypes} from 'react'
 
 class SideBar extends Component {
   static propTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
+    namespaces: ImmutablePropTypes.map.isRequired
   }
 
   handleLogoClick = () => {
@@ -21,7 +26,8 @@ class SideBar extends Component {
           borderColor,
           primary1Color
         }
-      }
+      },
+      namespaces
     } = this.props
 
     return (
@@ -43,10 +49,29 @@ class SideBar extends Component {
               color: alternateTextColor,
               lineHeight: 'initial',
               margin: 0,
-              padding: '2rem 0 .5rem 0'
+              padding: '2rem 0 .5rem .5rem'
             }}
           >MP</h1>
         </MenuItem>
+        <Subheader>Namespaces</Subheader>
+        <SelectField
+          style={{
+            width: '100px'
+          }}
+          value={1}
+        >
+          {
+            namespaces.get('data').map((namespace, id) => {
+              return (
+                <MenuItem
+                  key={id}
+                  primaryText={namespace.get('name')}
+                  value={id}
+                />
+              )
+            }).toArray()
+          }
+        </SelectField>
         {
           /*
            * Loop through routes to generate menu items
@@ -57,4 +82,6 @@ class SideBar extends Component {
   }
 }
 
-export default muiThemeable()(SideBar)
+export default connect((state) => ({
+  namespaces: state.namespaces
+}))(muiThemeable()(SideBar))

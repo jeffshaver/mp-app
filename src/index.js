@@ -1,6 +1,7 @@
 import App from './App'
 import {configureStore} from './configure-store'
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import Namespaces from './components/Namespaces'
 import Project from './components/Project'
 import Projects from './components/Projects'
 import {Provider} from 'react-redux'
@@ -28,7 +29,11 @@ ReactDOM.render((
         />
         <Route
           component={Project}
-          path={'/projects/:id'}
+          path={'/projects/:projectId'}
+        />
+        <Route
+          component={Namespaces}
+          path={'/projects/:projectId/namespaces'}
         />
       </Route>
     </Router>

@@ -7,7 +7,7 @@ const style = {
   background: theme.palette.primary1Color,
   color: theme.palette.alternateTextColor,
   margin: 0,
-  padding: '2rem 0 .5rem'
+  padding: '2rem 0 .5rem .5rem'
 }
 
 const Header = ({children}) => (

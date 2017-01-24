@@ -26,9 +26,14 @@ export const fetchProjects = (userId) =>
     dispatch(fetchProjectsRequest(userId))
 
     // API: remove
-    setTimeout(() => {
-      dispatch(fetchProjectsSuccess(projectsData[userId]))
-    }, 1000)
+    const promise = new Promise((resolve) => {
+      setTimeout(() => {
+        dispatch(fetchProjectsSuccess(projectsData[userId]))
+        resolve()
+      }, 1000)
+    })
+
+    return promise
 
     // API: add back in
     // return fetch(`${apiUri}/authenticate`, {...defaultFetchOptions})
