@@ -1,6 +1,6 @@
 /* globals describe, expect, it */
 
-import {Map} from 'immutable'
+import {fromJS} from 'immutable'
 import reducer, {
   FAILURE,
   fetchNamespacesFailure,
@@ -59,8 +59,8 @@ describe('reducer', () => {
     expect(reducer(initialState, {
       payload: {error},
       type: FAILURE
-    })).toEqual(Map({
-      data: Map(),
+    })).toEqual(fromJS({
+      data: {},
       error,
       isFetching: false,
       lastUpdated: null
@@ -70,8 +70,8 @@ describe('reducer', () => {
   it(`should handle ${REQUEST}`, () => {
     expect(reducer(initialState, {
       type: REQUEST
-    })).toEqual(Map({
-      data: Map(),
+    })).toEqual(fromJS({
+      data: {},
       error: undefined,
       isFetching: true,
       lastUpdated: null
@@ -89,8 +89,8 @@ describe('reducer', () => {
       type: SUCCESS
     })
 
-    expect(result).toEqual(Map({
-      data: Map(data),
+    expect(result).toEqual(fromJS({
+      data,
       error: undefined,
       isFetching: false,
       lastUpdated: result.lastUpdated

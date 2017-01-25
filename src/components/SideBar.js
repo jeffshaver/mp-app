@@ -34,7 +34,6 @@ class SideBar extends Component {
       <Drawer
         containerStyle={{borderRight: `1px solid ${borderColor}`}}
         docked={true}
-        width={110}
         zDepth={0}
       >
         <MenuItem
@@ -55,9 +54,7 @@ class SideBar extends Component {
         </MenuItem>
         <Subheader>Namespaces</Subheader>
         <SelectField
-          style={{
-            width: '100px'
-          }}
+          fullWidth={true}
           value={1}
         >
           {

@@ -43,6 +43,10 @@ export const fetchProjects = (userId) =>
     //   .catch((error) => dispatch(fetchProjectsFailure(error)))
   }
 
+export const getProject = (state, id) => {
+  return state.projects.getIn(['data', id])
+}
+
 export const initialState = Map({
   data: Map(),
   error: undefined,

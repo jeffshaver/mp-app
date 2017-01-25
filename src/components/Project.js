@@ -1,6 +1,6 @@
 import {browserHistory} from 'react-router'
 import {connect} from 'react-redux'
-import {getProject} from '../modules/project'
+import {getProject} from '../modules/projects'
 import Header from './Header'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './Loading'

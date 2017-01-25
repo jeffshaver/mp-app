@@ -42,7 +42,7 @@ export class App extends Component {
         <div
           style={{
             height: '100%',
-            margin: '0 0 0 110px',
+            margin: '0 0 0 256px',
             position: 'relative'
           }}
         >
