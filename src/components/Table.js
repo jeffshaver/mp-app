@@ -12,7 +12,7 @@ import React, {Component, PropTypes} from 'react'
 
 class Table extends Component {
   static propTypes = {
-    data: ImmutablePropTypes.map.isRequired,
+    data: ImmutablePropTypes.list.isRequired,
     headers: ImmutablePropTypes.list.isRequired,
     showIdColumn: PropTypes.bool,
     onRowClick: PropTypes.func
@@ -65,24 +65,24 @@ class Table extends Component {
           stripedRows={true}
         >
           {
-            data.entrySeq().toArray().map(([id, data]) => (
+            data.map((data) => (
               <TableRow
-                key={id}
+                key={data.get('id')}
                 striped={true}
                 style={{
                   cursor: onRowClick ? 'pointer' : 'default'
                 }}
-                onTouchTap={() => onRowClick && onRowClick(id, data)}
+                onTouchTap={() => onRowClick && onRowClick(data.get('id'), data)}
               >
                 {
                   showIdColumn
-                    ? <TableRowColumn>{id}</TableRowColumn>
+                    ? <TableRowColumn>{data.get('id')}</TableRowColumn>
                     : null
                 }
                 {
                   headers.map((header) => header.toLowerCase()).map((header) => (
                     <TableRowColumn
-                      key={`${id}_${data.get(header)}`}
+                      key={`${data.get('id')}_${data.get(header)}`}
                     >
                       {data.get(header)}
                     </TableRowColumn>

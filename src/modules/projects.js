@@ -1,6 +1,6 @@
-// API: remove
-import projectsData from '../data/projects'
-import {fromJS, Map} from 'immutable'
+import fetch from 'isomorphic-fetch'
+import {checkFetchStatus, findById, handleFailure, handleSuccess} from './utilities'
+import {fromJS, List, Map} from 'immutable'
 
 export const FAILURE = 'mp-app/projects/FAILURE'
 export const REQUEST = 'mp-app/projects/REQUEST'
@@ -21,34 +21,26 @@ export const fetchProjectsSuccess = (data) => ({
   type: SUCCESS
 })
 
+const handleFetchProjectsFailure = (handleFailure(fetchProjectsFailure))
+const handleFetchProjectsSuccess = (handleSuccess(fetchProjectsSuccess, 'projects'))
+
 export const fetchProjects = (userId) =>
   (dispatch) => {
     dispatch(fetchProjectsRequest(userId))
 
-    // API: remove
-    const promise = new Promise((resolve) => {
-      setTimeout(() => {
-        dispatch(fetchProjectsSuccess(projectsData[userId]))
-        resolve()
-      }, 1000)
-    })
-
-    return promise
-
-    // API: add back in
-    // return fetch(`${apiUri}/authenticate`, {...defaultFetchOptions})
-    //   .then(checkFetchStatus)
-    //   .then((response) => response.json())
-    //   .then((json) => dispatch(fetchProjectsSuccess(json)))
-    //   .catch((error) => dispatch(fetchProjectsFailure(error)))
+    return fetch(`http://localhost:4000/graphql?query={projects(userId:"${userId}"){id,name,status}}`)
+      .then(checkFetchStatus)
+      .then((response) => response.json())
+      .then((json) => handleFetchProjectsSuccess(dispatch, json))
+      .catch((error) => handleFetchProjectsFailure(dispatch, error))
   }
 
 export const getProject = (state, id) => {
-  return state.projects.getIn(['data', id])
+  return findById(state.projects.get('data'), id)
 }
 
 export const initialState = Map({
-  data: Map(),
+  data: List(),
   error: undefined,
   isFetching: false,
   lastUpdated: null

@@ -1,5 +1,3 @@
-export default {
-  id: 0,
-  username: 'jeff',
-  authenticated: true
-}
+import user from './user.es5'
+
+export default user

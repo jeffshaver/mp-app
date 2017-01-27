@@ -66,7 +66,7 @@ class SideBar extends Component {
                   value={id}
                 />
               )
-            }).toArray()
+            })
           }
         </SelectField>
         {

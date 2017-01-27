@@ -14,7 +14,7 @@ export class Namespaces extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     namespaces: ImmutablePropTypes.map.isRequired,
-    namespacesForProject: ImmutablePropTypes.map.isRequired,
+    namespacesForProject: ImmutablePropTypes.list.isRequired,
     project: ImmutablePropTypes.map,
     projectId: PropTypes.string.isRequired,
     projects: ImmutablePropTypes.map.isRequired,

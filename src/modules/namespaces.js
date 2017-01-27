@@ -1,6 +1,6 @@
-// API: remove
-import namespacesData from '../data/namespaces'
-import {fromJS, Map} from 'immutable'
+import fetch from 'isomorphic-fetch'
+import {checkFetchStatus, filterByKey, handleFailure, handleSuccess} from './utilities'
+import {fromJS, List, Map} from 'immutable'
 
 export const FAILURE = 'mp-app/namespaces/FAILURE'
 export const REQUEST = 'mp-app/namespaces/REQUEST'
@@ -21,37 +21,27 @@ export const fetchNamespacesSuccess = (data) => ({
   type: SUCCESS
 })
 
+const handleFetchNamespacesFailure = handleFailure(fetchNamespacesFailure)
+const handleFetchNamespacesSuccess = handleSuccess(fetchNamespacesSuccess, 'namespaces')
+
 export const fetchNamespaces = (userId) =>
   (dispatch) => {
     dispatch(fetchNamespacesRequest(userId))
 
-    // API: remove
-    const promise = new Promise((resolve) => {
-      setTimeout(() => {
-        dispatch(fetchNamespacesSuccess(namespacesData[userId]))
-        resolve()
-      }, 1000)
-    })
-
-    return promise
-
-    // API: add back in
-    // return fetch(`${apiUri}/authenticate`, {...defaultFetchOptions})
-    //   .then(checkFetchStatus)
-    //   .then((response) => response.json())
-    //   .then((json) => dispatch(fetchNamespacesSuccess(json)))
-    //   .catch((error) => dispatch(fetchNamespacesFailure(error)))
+    return fetch(`http://localhost:4000/graphql?query={namespaces(userId:"${userId}"){id,name,projectId,status}}`)
+      .then(checkFetchStatus)
+      .then((response) => response.json())
+      .then((json) => handleFetchNamespacesSuccess(dispatch, json))
+      .catch((error) => handleFetchNamespacesFailure(dispatch, error))
   }
 
 // Selectors
 export const getNamespacesForProject = (state, projectId) => {
-  return state.namespaces.get('data').filter((namespace, id) => {
-    return namespace.get('projectId') === projectId
-  })
+  return filterByKey(state.namespaces.get('data'), projectId, 'projectId')
 }
 
 export const initialState = Map({
-  data: Map(),
+  data: List(),
   error: undefined,
   isFetching: false,
   lastUpdated: null

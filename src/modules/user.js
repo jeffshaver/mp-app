@@ -1,6 +1,6 @@
+import fetch from 'isomorphic-fetch'
 import {Map} from 'immutable'
-// API: remove
-import userData from '../data/user'
+import {checkFetchStatus, handleFailure, handleSuccess} from './utilities'
 
 export const FAILURE = 'mp-app/user/FAILURE'
 export const REQUEST = 'mp-app/user/REQUEST'
@@ -21,26 +21,18 @@ export const fetchUserSuccess = (data) => ({
   type: SUCCESS
 })
 
+const handleFetchUserFailure = handleFailure(fetchUserFailure)
+const handleFetchUserSuccess = handleSuccess(fetchUserSuccess, 'user')
+
 export const fetchUser = () =>
   (dispatch) => {
     dispatch(fetchUserRequest())
 
-    // API: remove
-    const promise = new Promise((resolve) => {
-      setTimeout(() => {
-        dispatch(fetchUserSuccess(userData))
-        resolve(userData)
-      }, 1000)
-    })
-
-    return promise
-
-    // API: add back in
-    // return fetch(`${apiUri}/authenticate`, {...defaultFetchOptions})
-    //   .then(checkFetchStatus)
-    //   .then((response) => response.json())
-    //   .then((json) => dispatch(fetchUserSuccess(json)))
-    //   .catch((error) => dispatch(fetchUserFailure(error)))
+    return fetch('http://localhost:4000/graphql/?query={user{authenticated,id,username}}')
+      .then(checkFetchStatus)
+      .then((response) => response.json())
+      .then((json) => handleFetchUserSuccess(dispatch, json))
+      .catch((error) => handleFetchUserFailure(dispatch, error))
   }
 
 export const initialState = Map({
