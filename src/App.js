@@ -1,42 +1,56 @@
 import {connect} from 'react-redux'
-import {fetchNamespaces} from './modules/namespaces'
-import {fetchProjects} from './modules/projects'
-import {fetchUser} from './modules/user'
+import {fromJS} from 'immutable'
+import gql from 'graphql-tag'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './components/Loading'
-import {Map} from 'immutable'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import SideBar from './components/SideBar'
+import {compose, graphql} from 'react-apollo'
+import NamespacesQuery, {NamespacesQueryOptions} from './queries/NamespacesQuery'
+import ProjectsQuery, {ProjectsQueryOptions} from './queries/ProjectsQuery'
 import React, {Component, PropTypes} from 'react'
+
+// get user and prefetch projects / namespaces
+const AppQuery = gql`
+  query App {
+    deployments {
+      id
+      name
+      namespaceId
+      status
+    }
+    user {
+      authenticated
+      id
+      username
+    }
+  }
+`
 
 export class App extends Component {
   static propTypes = {
     children: PropTypes.node,
+    deploymentId: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
+    namespaceId: PropTypes.string,
+    projectId: PropTypes.string,
     user: ImmutablePropTypes.map.isRequired
-  }
-  static defaultProps = {
-    user: Map()
   }
 
   componentDidMount () {
-    const {dispatch, user} = this.props
+    const {user} = this.props
 
     if (user.getIn(['data', 'authenticated'])) return
-
-    dispatch(
-      fetchUser()
-    )
-    .then((user) => {
-      Promise.all([
-        dispatch(fetchProjects(user.id)),
-        dispatch(fetchNamespaces(user.id))
-      ])
-    })
   }
 
   render () {
-    const {children, user} = this.props
+    const {
+      children,
+      deploymentId,
+      namespaceId,
+      projectId,
+      user
+    } = this.props
     const content = user.getIn(['data', 'authenticated'])
       ? (
         <div
@@ -46,7 +60,11 @@ export class App extends Component {
             position: 'relative'
           }}
         >
-          <SideBar />
+          <SideBar
+            deploymentId={deploymentId}
+            namespaceId={namespaceId}
+            projectId={projectId}
+          />
           {children}
         </div>
       )
@@ -62,6 +80,25 @@ export class App extends Component {
   }
 }
 
-export default connect((state) => ({
-  user: state.user
-}))(App)
+export default compose(
+  graphql(AppQuery, {
+    props: ({data: {loading: isFetching, deployments, user}}) => ({
+      isFetching,
+      deployments: fromJS({
+        data: deployments
+      }),
+      user: fromJS({
+        data: user
+      })
+    })
+  }),
+  graphql(NamespacesQuery, NamespacesQueryOptions),
+  graphql(ProjectsQuery, ProjectsQueryOptions),
+  connect((state, ownProps) => {
+    return {
+      deploymentId: ownProps.params.deploymentId,
+      namespaceId: ownProps.params.namespaceId,
+      projectId: ownProps.params.projectId
+    }
+  })
+)(App)

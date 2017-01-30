@@ -1,27 +1,35 @@
-import {browserHistory} from 'react-router'
-import {connect} from 'react-redux'
+import CardWrapper from './CardWrapper'
+import {fromJS} from 'immutable'
+import goToNamespaces from '../utilities/go-to-namespaces'
+import {graphql} from 'react-apollo'
 import Header from './Header'
 import ImmutablePropTypes from 'react-immutable-proptypes'
-import {List} from 'immutable'
 import Loading from './Loading'
 import Table from './Table'
-import React, {Component, PropTypes} from 'react'
+import ProjectsQuery, {ProjectsQueryOptions} from '../queries/ProjectsQuery'
+import React, {Component} from 'react'
 
 // TODO: handle error state
 export class Projects extends Component {
   static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    projects: ImmutablePropTypes.map.isRequired,
-    user: ImmutablePropTypes.map.isRequired
+    projects: ImmutablePropTypes.map.isRequired
   }
 
-  handleRowClick = (id) => {
-    browserHistory.push(`/projects/${id}/namespaces`)
+  static defaultProps = {
+    projects: fromJS({
+      data: []
+    })
+  }
+
+  handleRowClick = (data) => {
+    const id = data.get('id')
+
+    goToNamespaces(id)
   }
 
   render () {
     const {projects} = this.props
-    const header = <Header>Projects</Header>
+    const header = <Header path={['projects']} />
 
     if (projects.get('isFetching')) {
       return (
@@ -31,7 +39,7 @@ export class Projects extends Component {
         </div>
       )
     }
-    const headers = List([
+    const headers = fromJS([
       'Name',
       'Status'
     ])
@@ -39,18 +47,17 @@ export class Projects extends Component {
     return (
       <div>
         {header}
-        <Table
-          data={projects.get('data')}
-          headers={headers}
-          showIdColumn={true}
-          onRowClick={this.handleRowClick}
-        />
+        <CardWrapper>
+          <Table
+            data={projects.get('data')}
+            headers={headers}
+            showIdColumn={true}
+            onRowClick={this.handleRowClick}
+          />
+        </CardWrapper>
       </div>
     )
   }
 }
 
-export default connect((state) => ({
-  projects: state.projects,
-  user: state.user
-}))(Projects)
+export default graphql(ProjectsQuery, ProjectsQueryOptions)(Projects)

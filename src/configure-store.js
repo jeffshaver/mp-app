@@ -1,18 +1,17 @@
+import appReducers from './modules'
 import logger from 'redux-logger'
-import rootReducer from './modules'
-import thunk from 'redux-thunk'
-import {applyMiddleware, compose, createStore} from 'redux'
+import {applyMiddleware, combineReducers, compose, createStore} from 'redux'
 
-export const configureStore = (initialState) => {
-  const middlewares = [thunk]
+export const configureStore = (initialState, reducers, middlewares) => {
+  const reducer = combineReducers({...appReducers, ...reducers})
 
-  if (process.env !== 'production') {
+  if (process.env.NODE_ENV !== 'production') {
     middlewares.push(logger())
   }
 
   if (module.hot) {
     module.hot.accept('./modules', () => {
-      const nextReducer = require('./modules').rootReducer
+      const nextReducer = combineReducers({...require('./modules'), ...reducers})
 
       store.replaceReducer(nextReducer)
     })
@@ -22,7 +21,7 @@ export const configureStore = (initialState) => {
     applyMiddleware(...middlewares),
     window.devToolsExtension ? window.devToolsExtension() : (f) => f
   )
-  const store = createStore(rootReducer, initialState, enhancer)
+  const store = createStore(reducer, initialState, enhancer)
 
   return store
 }

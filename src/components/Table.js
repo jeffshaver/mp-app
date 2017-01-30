@@ -40,7 +40,7 @@ class Table extends Component {
       <MaterialTable
         fixedFooter={false}
         headerStyle={headerStyle}
-        height={`${tableHeight}px`}
+        height={willHaveScrollbar ? `${tableHeight}px` : 'auto'}
         selectable={false}
       >
         <TableHeader
@@ -72,7 +72,7 @@ class Table extends Component {
                 style={{
                   cursor: onRowClick ? 'pointer' : 'default'
                 }}
-                onTouchTap={() => onRowClick && onRowClick(data.get('id'), data)}
+                onTouchTap={() => onRowClick && onRowClick(data)}
               >
                 {
                   showIdColumn

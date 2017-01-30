@@ -1,4 +1,3 @@
-import {browserHistory} from 'react-router'
 import {connect} from 'react-redux'
 import {getProject} from '../modules/projects'
 import Header from './Header'
@@ -17,17 +16,13 @@ export class Project extends Component {
     user: ImmutablePropTypes.map.isRequired
   }
 
-  goToProjects = () => {
-    browserHistory.push('/projects')
-  }
-
   render () {
     const {project, projectId, projects} = this.props
 
     if (projects.get('isFetching')) {
       return (
         <div>
-          <Header>Projects</Header>
+          <Header path={['projects']} />
           <Loading message={'Loading Projects'} />
         </div>
       )

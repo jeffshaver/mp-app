@@ -1,38 +1,42 @@
+import {browserHistory} from 'react-router'
 import CardWrapper from './CardWrapper'
-import goToDeployments from '../utilities/go-to-deployments'
 import gql from 'graphql-tag'
 import Header from './Header'
 import ImmutablePropTypes from 'react-immutable-proptypes'
 import Loading from './Loading'
 import Table from './Table'
 import {compose, graphql} from 'react-apollo'
-import {fromJS, Map} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
+import NamespaceQuery, {NamespaceQueryOptions} from '../queries/NamespaceQuery'
 import ProjectQuery, {ProjectQueryOptions} from '../queries/ProjectQuery'
 import React, {Component, PropTypes} from 'react'
 
-const NamespacesQuery = gql`
-  query Namespaces($projectId: String) {
-    namespacesByProject(projectId: $projectId) {
+const DeploymentsQuery = gql`
+  query Deployments($namespaceId: String) {
+    deploymentsByNamespace(namespaceId: $namespaceId) {
       id
       name
-      projectId
+      namespaceId
       status
     }
   }
 `
 
 // TODO: handle error state
-export class Namespaces extends Component {
+export class Deployments extends Component {
   static propTypes = {
+    deployments: ImmutablePropTypes.list.isRequired,
     dispatch: PropTypes.func,
     isFetching: PropTypes.bool,
-    namespaces: ImmutablePropTypes.list.isRequired,
+    namespace: ImmutablePropTypes.map,
     project: ImmutablePropTypes.map,
     projectId: PropTypes.string
   }
 
   static defaultProps = {
     isFetching: true,
+    deployments: List(),
+    namespace: Map(),
     project: Map()
   }
 
@@ -40,14 +44,16 @@ export class Namespaces extends Component {
     const id = data.get('id')
     const projectId = data.get('projectId')
 
-    goToDeployments(id, projectId)
+    browserHistory.push(`/projects/${projectId}/namespaces/${id}`)
   }
 
   render () {
-    const {isFetching, namespaces, project} = this.props
+    const {isFetching, deployments, namespace, project} = this.props
+    const projectName = project.get('name', '')
+    const namespaceName = namespace.get('name', '')
     const header = (
       <Header
-        path={[project.get('name', ''), 'namespaces']}
+        path={[projectName, namespaceName, 'deployments']}
       />
     )
 
@@ -67,10 +73,9 @@ export class Namespaces extends Component {
         {header}
         <CardWrapper>
           <Table
-            data={namespaces}
+            data={deployments}
             headers={headers}
             showIdColumn={true}
-            onRowClick={this.handleRowClick}
           />
         </CardWrapper>
       </div>
@@ -79,16 +84,17 @@ export class Namespaces extends Component {
 }
 
 export default compose(
-  graphql(NamespacesQuery, {
-    options: ({params: {projectId}}) => ({
+  graphql(DeploymentsQuery, {
+    options: ({params: {namespaceId}}) => ({
       variables: {
-        projectId
+        namespaceId
       }
     }),
-    props: ({data: {loading: isFetching, namespacesByProject = []}}) => ({
+    props: ({data: {loading: isFetching, deploymentsByNamespace: deployments}}) => ({
       isFetching,
-      namespaces: fromJS(namespacesByProject)
+      deployments: fromJS(deployments)
     })
   }),
+  graphql(NamespaceQuery, NamespaceQueryOptions),
   graphql(ProjectQuery, ProjectQueryOptions)
-)(Namespaces)
+)(Deployments)
