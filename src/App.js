@@ -9,6 +9,7 @@ import {compose, graphql} from 'react-apollo'
 import NamespacesQuery, {NamespacesQueryOptions} from './queries/NamespacesQuery'
 import ProjectsQuery, {ProjectsQueryOptions} from './queries/ProjectsQuery'
 import React, {Component, PropTypes} from 'react'
+import UserQuery, {UserQueryOptions} from './queries/UserQuery'
 
 // get user and prefetch projects / namespaces
 const AppQuery = gql`
@@ -18,11 +19,6 @@ const AppQuery = gql`
       name
       namespaceId
       status
-    }
-    user {
-      authenticated
-      id
-      username
     }
   }
 `
@@ -82,16 +78,14 @@ export class App extends Component {
 
 export default compose(
   graphql(AppQuery, {
-    props: ({data: {loading: isFetching, deployments, user}}) => ({
+    props: ({data: {loading: isFetching, deployments}}) => ({
       isFetching,
       deployments: fromJS({
         data: deployments
-      }),
-      user: fromJS({
-        data: user
       })
     })
   }),
+  graphql(UserQuery, UserQueryOptions),
   graphql(NamespacesQuery, NamespacesQueryOptions),
   graphql(ProjectsQuery, ProjectsQueryOptions),
   connect((state, ownProps) => {

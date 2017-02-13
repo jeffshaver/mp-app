@@ -265,7 +265,7 @@ function runDevServer (host, port, protocol) {
     // Enable HTTPS if the HTTPS environment variable is set to 'true'
     https: protocol === 'https',
     host: host,
-    progress: true
+    overlay: false
   })
 
   // Our custom middleware proxies requests to /index.html or a remote API.

@@ -1,12 +1,16 @@
 import Add from 'material-ui/svg-icons/content/add'
 import {browserHistory} from 'react-router'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import {graphql} from 'react-apollo'
 import IconButton from 'material-ui/IconButton'
 import IconMenu from 'material-ui/IconMenu'
+import ImmutablePropTypes from 'react-immutable-proptypes'
 // import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
+import Person from 'material-ui/svg-icons/social/person'
 // import Popover from 'material-ui/Popover'
 import React, {Component, PropTypes} from 'react'
+import UserQuery, {UserQueryOptions} from '../queries/UserQuery'
 
 const theme = getMuiTheme()
 
@@ -45,7 +49,8 @@ const style = {
 
 class Header extends Component {
   static propTypes = {
-    path: PropTypes.array.isRequired
+    path: PropTypes.array.isRequired,
+    user: ImmutablePropTypes.map.isRequired
   }
 
   constructor (props) {
@@ -74,7 +79,7 @@ class Header extends Component {
   }
 
   render () {
-    const {path} = this.props
+    const {path, user} = this.props
 
     return (
       <div style={style.bar}>
@@ -91,10 +96,24 @@ class Header extends Component {
             <MenuItem onTouchTap={this.goToCreateNamespace}>Create Namespace</MenuItem>
             <MenuItem>Create Project</MenuItem>
           </IconMenu>
+          {
+            user.getIn(['data', 'authenticated'])
+              ? (
+                <IconMenu
+                  anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                  iconButtonElement={<IconButton style={{padding: '0'}}><Person color={theme.palette.alternateTextColor} /></IconButton>}
+                  targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                >
+                  <MenuItem>Profile</MenuItem>
+                  <MenuItem>Logout</MenuItem>
+                </IconMenu>
+              )
+              : null
+          }
         </h1>
       </div>
     )
   }
 }
 
-export default Header
+export default graphql(UserQuery, UserQueryOptions)(Header)
