@@ -4,7 +4,7 @@ MAINTAINER jeff_e_shaver
 
 # install curl and git
 RUN apk add --no-cache git \
-  && git clone https://github.com/jeffshaver/mp-app -b apollo --single-branch \
+  && git clone https://github.com/jeffshaver/mp-app -b master --single-branch \
   && apk del git
 
 ENV NODE_ENV production
@@ -28,6 +28,7 @@ RUN NODE_ENV=development npm install \
     /opt/app/node_modules \
   && npm install \
     compression \
+    dotenv \
     express \
     morgan \
     serve-static
