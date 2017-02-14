@@ -1,0 +1,15 @@
+html, body, #root {
+  height: 100%;
+  width: 100%
+}
+body {
+  box-sizing: border-box;
+  font-family: Roboto, sans-serif;
+}
+body * {
+  box-sizing: inherit;
+  font-family: inherit;
+}
+h1, h2, h3, h4 {
+  font-weight: 300;
+}

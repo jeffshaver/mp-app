@@ -16,8 +16,8 @@ import ApolloClient, {createNetworkInterface, toIdValue} from 'apollo-client'
 import {browserHistory, IndexRedirect, Route, Router} from 'react-router'
 
 const host = window.location.host
-const graphqlAddress = process.env.REACT_APP_GRAPHQL_ADDRESS
-const apiUri = graphqlAddress || `//${host}/graphql`
+const apiAddress = process.env.API_ADDRESS
+const apiUri = apiAddress || `//${host}/api`
 const dataIdFromObject = (result) => {
   if (result.id && result.__typename) {
     return result.__typename + result.id
