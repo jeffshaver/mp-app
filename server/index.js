@@ -12,16 +12,15 @@ const apiAddress = process.env.API_ADDRESS
   : ''
 const app = express()
 
-/* eslint-disable quotes */
-const csp = [
-  "default-src 'none'",
-  `connect-src 'self' ${apiAddress}`,
-  "font-src 'self'",
-  "img-src 'self'",
-  "script-src 'self'",
-  "style-src 'self' 'unsafe-inline'"
-].join('; ')
-/* eslint-enable quotes */
+const csp = `
+  default-src 'self';
+  connect-src 'self' ${apiAddress};
+  font-src 'self' data:;
+  img-src 'self';
+  script-src 'self';
+  style-src 'self' 'sha256-D8Sj8qhd4FvnVwN5w9riiArwsqYOEwHolv228Ic6Vqk=';
+  worker-src 'self';
+`.replace(/\n/g, '')
 
 app.use(compression())
 app.use(morgan('dev'))
@@ -33,6 +32,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/static', serveStatic(path.join(__dirname, '../build/static')))
+app.use('/sw.js', serveStatic(path.join(__dirname, '../build/sw.js')))
 app.use('/default.css', serveStatic(path.join(__dirname, '../build/default.css')))
 app.use('/fonts.css', serveStatic(path.join(__dirname, '../build/fonts.css')))
 app.use('/reset.css', serveStatic(path.join(__dirname, '../build/reset.css')))

@@ -4,10 +4,16 @@ import gql from 'graphql-tag'
 const NamespacesQuery = gql`
   query Namespaces {
     namespaces {
-      id
-      name
-      projectId
-      status
+      metadata {
+        annotations {
+          projectId
+        }
+        name
+        uid
+      }
+      status {
+        phase
+      }
     }
   }
 `

@@ -15,10 +15,16 @@ import React, {Component, PropTypes} from 'react'
 const CreateNamespaceMutation = gql`
   mutation createNamespace($name: String!, $projectId: String!) {
     createNamespace(name: $name, projectId: $projectId) {
-      id
-      name
-      projectId
-      status
+      metadata {
+        annotations {
+          projectId
+        }
+        name
+        uid
+      }
+      status {
+        phase
+      }
     }
   }
 `
@@ -71,8 +77,8 @@ class CreateNamespace extends Component {
       refetchQueries: [{
         query: NamespacesQuery
       }]
-    }).then(({data: {createNamespace: {id, projectId}}}) => {
-      goToDeployments(id, projectId)
+    }).then(({data: {createNamespace: {metadata: {uid, annotations: {projectId}}}}}) => {
+      goToDeployments(uid, projectId)
     })
   }
 

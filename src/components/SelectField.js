@@ -15,6 +15,16 @@ const SelectField = ({
   valueKey,
   onItemTouchTap
 }) => {
+  if (typeof keyKey === 'string') {
+    keyKey = [keyKey]
+  }
+  if (typeof textKey === 'string') {
+    textKey = [textKey]
+  }
+  if (typeof valueKey === 'string') {
+    valueKey = [valueKey]
+  }
+
   return (
     <MaterialSelectField
       floatingLabelText={label}
@@ -26,9 +36,9 @@ const SelectField = ({
         data.map((data) => {
           return (
             <MenuItem
-              key={data.get(keyKey)}
-              primaryText={data.get(textKey)}
-              value={data.get(valueKey)}
+              key={data.getIn(keyKey)}
+              primaryText={data.getIn(textKey)}
+              value={data.getIn(valueKey)}
               onTouchTap={() => onItemTouchTap(data)}
             />
           )
@@ -40,20 +50,29 @@ const SelectField = ({
 
 SelectField.propTypes = {
   data: ImmutablePropTypes.list,
-  keyKey: PropTypes.string,
+  keyKey: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.string
+  ]),
   label: PropTypes.string,
   style: PropTypes.object,
-  textKey: PropTypes.string,
+  textKey: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.string
+  ]),
   underlineStyle: PropTypes.object,
   value: PropTypes.string,
-  valueKey: PropTypes.string,
+  valueKey: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.string
+  ]),
   onItemTouchTap: PropTypes.func
 }
 
 SelectField.defaultProps = {
   data: List(),
-  keyKey: 'id',
-  valueKey: 'id',
+  keyKey: ['id'],
+  valueKey: ['id'],
   onItemTouchTap: () => {}
 }
 

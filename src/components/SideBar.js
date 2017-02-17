@@ -65,10 +65,10 @@ class SideBar extends Component {
   }
 
   handleNamespaceClick = (data) => {
-    const id = data.get('id')
-    const projectId = data.get('projectId')
+    const uid = data.getIn(['metadata', 'uid'])
+    const projectId = data.getIn(['metadata', 'annotations', 'projectId'])
 
-    goToDeployments(id, projectId)
+    goToDeployments(uid, projectId)
   }
 
   handleProjectClick = (data) => {
@@ -126,11 +126,13 @@ class SideBar extends Component {
         />
         <SelectField
           data={namespaces.get('data')}
+          keyKey={['metadata', 'uid']}
           label={'Select a namespace'}
           style={style.selectField.default}
-          textKey={'name'}
+          textKey={['metadata', 'name']}
           underlineStyle={style.selectField.underline}
           value={namespaceId}
+          valueKey={['metadata', 'uid']}
           onItemTouchTap={(data) => {
             this.handleNamespaceClick(data)
           }}
