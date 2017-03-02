@@ -5,6 +5,7 @@ const express = require('express')
 const morgan = require('morgan')
 const path = require('path')
 const serveStatic = require('serve-static')
+const httpProxy = require('express-http-proxy')
 
 const port = process.env.PORT || 3000
 const apiAddress = process.env.API_ADDRESS
@@ -14,7 +15,7 @@ const app = express()
 
 const csp = `
   default-src 'self';
-  connect-src 'self' ${apiAddress};
+  connect-src 'self'${' ' + apiAddress};
   font-src 'self' data:;
   img-src 'self';
   script-src 'self';
@@ -36,6 +37,10 @@ app.use('/sw.js', serveStatic(path.join(__dirname, '../build/sw.js')))
 app.use('/default.css', serveStatic(path.join(__dirname, '../build/default.css')))
 app.use('/fonts.css', serveStatic(path.join(__dirname, '../build/fonts.css')))
 app.use('/reset.css', serveStatic(path.join(__dirname, '../build/reset.css')))
+
+app.use('/api', httpProxy(apiAddress, {
+  preserveHostHdr: true
+}))
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'))

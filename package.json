@@ -55,6 +55,7 @@
     "apollo-client": "^0.8.5",
     "compression": "^1.6.2",
     "express": "^4.14.0",
+    "express-http-proxy": "^0.11.0",
     "graphql-tag": "^1.2.4",
     "immutable": "^3.8.1",
     "material-ui": "^0.17.0",
