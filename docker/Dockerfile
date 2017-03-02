@@ -22,16 +22,18 @@ RUN NODE_ENV=development npm install \
   && npm run build \
   && rm -rf \
     /mp-app \
-    /opt/app/yarn.lock \
-    /root/.npm \
-    /tmp/npm* \
     /opt/app/node_modules \
+    /opt/app/yarn.lock \
   && npm install \
     compression \
     dotenv \
     express \
+    express-http-proxy \
     morgan \
-    serve-static
+    serve-static \
+  && rm -rf \
+  /root/.npm \
+  /tmp/npm* \
 
 EXPOSE $PORT
 CMD ["node", "server/index.js"]
