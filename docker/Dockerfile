@@ -33,7 +33,7 @@ RUN NODE_ENV=development npm install \
     serve-static \
   && rm -rf \
   /root/.npm \
-  /tmp/npm* \
+  /tmp/npm*
 
 EXPOSE $PORT
 CMD ["node", "server/index.js"]
