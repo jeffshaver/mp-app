@@ -38,7 +38,7 @@ app.use('/default.css', serveStatic(path.join(__dirname, '../build/default.css')
 app.use('/fonts.css', serveStatic(path.join(__dirname, '../build/fonts.css')))
 app.use('/reset.css', serveStatic(path.join(__dirname, '../build/reset.css')))
 
-app.use('/api', httpProxy(apiAddress, {
+app.post('/api', httpProxy(apiAddress, {
   preserveHostHdr: true
 }))
 
